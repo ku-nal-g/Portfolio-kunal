@@ -108,7 +108,7 @@ export class App {
       role: 'Software Engineer',
       company: 'Celebal Technologies',
       location: 'Jaipur, Rajasthan',
-      period: 'November 2022 – Present',
+      period: 'July 2022 – Present',
       highlights: [
         'Architected and deployed end-to-end HRMS platform serving 2000+ employees, enabling project management, task tracking, and timesheet automation, reducing administrative overhead by 60%',
         'Engineered real-time financial dashboards with dynamic profitability analytics for 50+ active projects, automating financial reporting and improving decision-making accuracy by 45%',
