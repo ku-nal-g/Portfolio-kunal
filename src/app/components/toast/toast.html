@@ -1,0 +1,32 @@
+<div class="toast-host" aria-live="polite" aria-atomic="true">
+  @for (item of toast.toasts(); track item.id) {
+    <div
+      class="toast-item"
+      [class.toast-item--success]="item.kind === 'success'"
+      [class.toast-item--error]="item.kind === 'error'"
+      role="status"
+    >
+      <div class="toast-item__icon" aria-hidden="true">
+        @if (item.kind === 'success') {
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M20 6L9 17l-5-5" />
+          </svg>
+        } @else {
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8v4M12 16h.01" />
+          </svg>
+        }
+      </div>
+      <div class="toast-item__body">
+        <p class="toast-item__title">{{ item.title }}</p>
+        <p class="toast-item__message">{{ item.message }}</p>
+      </div>
+      <button type="button" class="toast-item__close" (click)="dismiss(item.id)" aria-label="Dismiss notification">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  }
+</div>

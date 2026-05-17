@@ -84,19 +84,42 @@
         </div>
       </div>
       <div class="hero__visual">
-        <div class="hero__visual-stack">
-          <div class="hero__floating-card hero__floating-card--top reveal reveal--delay-2" aria-hidden="true">
-            <p class="float-card__title">Frontend</p>
-            <p class="float-card__text">Angular · TypeScript · UX detail</p>
+        <div class="hero-portrait">
+          <div class="hero-portrait__frame" aria-hidden="true">
+            <div class="hero-portrait__ring hero-portrait__ring--outer"></div>
+            <div class="hero-portrait__ring hero-portrait__ring--inner"></div>
+            <div class="hero-portrait__glow"></div>
           </div>
 
-          <div class="hero__photo-wrap reveal">
-            <img src="profile.png" width="520" height="560" alt="Kunal Gupta, Full-Stack Developer" />
+          <div class="hero-portrait__photo-wrap">
+            <figure class="hero-portrait__photo reveal">
+              <img
+                src="profile.png"
+                width="280"
+                height="280"
+                alt="Kunal Gupta, Full-Stack Developer"
+              />
+            </figure>
           </div>
 
-          <div class="hero__floating-card hero__floating-card--bottom reveal reveal--delay-3" aria-hidden="true">
-            <p class="float-card__title">Cloud & AI</p>
-            <p class="float-card__text">Azure DevOps · OpenAI · Dashboards</p>
+          <div class="hero-orbit hero-orbit--one reveal reveal--delay-2" aria-hidden="true">
+            <span class="hero-orbit__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" />
+              </svg>
+            </span>
+            <span class="hero-orbit__label">Frontend</span>
+            <span class="hero-orbit__sub">Angular · TS</span>
+          </div>
+
+          <div class="hero-orbit hero-orbit--two reveal reveal--delay-3" aria-hidden="true">
+            <span class="hero-orbit__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M18 10h-4V6a2 2 0 00-4 0v4H6a2 2 0 000 4h4v4a2 2 0 004 0v-4h4a2 2 0 000-4z" />
+              </svg>
+            </span>
+            <span class="hero-orbit__label">Cloud & AI</span>
+            <span class="hero-orbit__sub">Azure · OpenAI</span>
           </div>
         </div>
       </div>
@@ -305,6 +328,8 @@
     <p>© {{ currentYear }} Kunal Gupta · Full-Stack Developer · Jaipur, India</p>
   </footer>
 </div>
+
+<app-toast />
 
 @if (isLoading()) {
   <app-loader></app-loader>

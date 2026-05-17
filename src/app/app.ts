@@ -9,18 +9,22 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Loader } from './components/loader/loader';
+import { ToastContainer } from './components/toast/toast';
 import { Api } from './services/api';
+import { Toast } from './services/toast';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ReactiveFormsModule, Loader],
+  imports: [ReactiveFormsModule, Loader, ToastContainer],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly toast = inject(Toast);
 
   constructor(private apiService: Api) {
     if (!isPlatformBrowser(this.platformId)) {
@@ -310,19 +314,17 @@ export class App {
     this.isLoading.set(true);
 
     this.apiService.postFormData({ name, email, message }).subscribe({
-      next: (response) => {
+      next: () => {
         this.formSubmitted.set(true);
         this.contactForm.reset();
         this.isLoading.set(false);
-        this.apiService.showSuccess();
+        this.toast.success('Your message was sent successfully.');
       },
       error: (error) => {
         console.error('Error submitting form:', error);
         this.isLoading.set(false);
-        this.apiService.showError();
-      }
+        this.toast.error('Could not send your message. Please try again or email me directly.');
+      },
     });
-    this.formSubmitted.set(true);
-    this.contactForm.reset();
   }
 }
