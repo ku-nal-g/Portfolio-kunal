@@ -1,21 +1,109 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import {
+  afterNextRender,
+  Component,
+  DestroyRef,
+  inject,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Loader } from './components/loader/loader';
+import { Api } from './services/api';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule, Loader],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
+
+  constructor(private apiService: Api) {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    afterNextRender(() => this.initScrollEffects());
+  }
+
+  /** Reveal sections in view; observe the rest (runs after layout + hydration). */
+  private initScrollEffects(): void {
+    const header = document.querySelector('.portfolio-header');
+    let scrollScanScheduled = false;
+
+    const show = (el: Element): void => {
+      el.classList.add('is-visible');
+    };
+
+    const isInViewport = (el: Element): boolean => {
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      return rect.top < vh * 0.92 && rect.bottom > vh * 0.04;
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            show(entry.target);
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0, rootMargin: '0px 0px 8% 0px' }
+    );
+
+    const scanReveals = (): void => {
+      document.querySelectorAll('.reveal-on-scroll:not(.is-visible)').forEach((el) => {
+        if (isInViewport(el)) {
+          show(el);
+          observer.unobserve(el);
+        } else {
+          observer.observe(el);
+        }
+      });
+    };
+
+    const onScroll = (): void => {
+      header?.classList.toggle('is-scrolled', window.scrollY > 24);
+
+      if (!scrollScanScheduled) {
+        scrollScanScheduled = true;
+        requestAnimationFrame(() => {
+          scanReveals();
+          scrollScanScheduled = false;
+        });
+      }
+    };
+
+    scanReveals();
+    requestAnimationFrame(scanReveals);
+    window.addEventListener('load', scanReveals, { once: true });
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    const onResize = (): void => scanReveals();
+    window.addEventListener('resize', onResize, { passive: true });
+
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      observer.disconnect();
+    });
+  }
+
   private readonly fb = inject(FormBuilder);
 
   protected readonly title = signal('Kunal Gupta | Portfolio');
   protected readonly currentYear = new Date().getFullYear();
   protected readonly mobileNavOpen = signal(false);
   protected readonly formSubmitted = signal(false);
+
+  protected readonly isLoading = signal(false);
 
   protected readonly contactForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -108,7 +196,7 @@ export class App {
       role: 'Software Engineer',
       company: 'Celebal Technologies',
       location: 'Jaipur, Rajasthan',
-      period: 'July 2022 – Present',
+      period: 'July 2022 – May 2026',
       highlights: [
         'Architected and deployed end-to-end HRMS platform serving 2000+ employees, enabling project management, task tracking, and timesheet automation, reducing administrative overhead by 60%',
         'Engineered real-time financial dashboards with dynamic profitability analytics for 50+ active projects, automating financial reporting and improving decision-making accuracy by 45%',
@@ -219,11 +307,21 @@ export class App {
       return;
     }
     const { name, email, message } = this.contactForm.getRawValue();
-    const subject = encodeURIComponent(`Portfolio contact from ${name}`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\n\n${message}`,
-    );
-    window.location.href = `mailto:${this.social.email}?subject=${subject}&body=${body}`;
+    this.isLoading.set(true);
+
+    this.apiService.postFormData({ name, email, message }).subscribe({
+      next: (response) => {
+        this.formSubmitted.set(true);
+        this.contactForm.reset();
+        this.isLoading.set(false);
+        this.apiService.showSuccess();
+      },
+      error: (error) => {
+        console.error('Error submitting form:', error);
+        this.isLoading.set(false);
+        this.apiService.showError();
+      }
+    });
     this.formSubmitted.set(true);
     this.contactForm.reset();
   }

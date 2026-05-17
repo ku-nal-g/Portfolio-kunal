@@ -104,8 +104,13 @@
 
     <section class="metrics portfolio-section portfolio-section--tight-top" aria-label="Key highlights">
       <div class="metrics-grid">
-        @for (item of highlights; track item.label) {
-          <article class="metric-card reveal">
+        @for (item of highlights; track item.label; let i = $index) {
+          <article
+            class="metric-card reveal-on-scroll"
+            [class.reveal-on-scroll--delay-1]="i === 1"
+            [class.reveal-on-scroll--delay-2]="i === 2"
+            [class.reveal-on-scroll--delay-3]="i === 3"
+          >
             <p class="metric-card__value">{{ item.value }}</p>
             <p class="metric-card__label">{{ item.label }}</p>
           </article>
@@ -114,20 +119,24 @@
     </section>
 
     <section id="about" class="portfolio-section portfolio-section--tight-top" aria-labelledby="about-heading">
-      <p class="section-kicker">About me</p>
-      <h2 id="about-heading" class="portfolio-section__title">Building dependable products with clean user experience.</h2>
-      <p class="portfolio-section__intro">{{ summary }}</p>
+      <p class="section-kicker reveal-on-scroll">About me</p>
+      <h2 id="about-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        Building dependable products with clean user experience.
+      </h2>
+      <p class="portfolio-section__intro reveal-on-scroll reveal-on-scroll--delay-2">{{ summary }}</p>
     </section>
 
     <section id="skills" class="portfolio-section" aria-labelledby="skills-heading">
-      <p class="section-kicker">Core stack</p>
-      <h2 id="skills-heading" class="portfolio-section__title">Technical skills</h2>
-      <p class="portfolio-section__intro">
+      <p class="section-kicker reveal-on-scroll">Core stack</p>
+      <h2 id="skills-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        Technical skills
+      </h2>
+      <p class="portfolio-section__intro reveal-on-scroll reveal-on-scroll--delay-2">
         A focused toolkit across the frontend, backend, cloud, and delivery practices I use every day.
       </p>
       <div class="skills-grid">
         @for (group of skills; track group.category) {
-          <article class="skill-card reveal">
+          <article class="skill-card reveal-on-scroll">
             <h3>{{ group.category }}</h3>
             <div class="skill-tags">
               @for (item of group.items; track item) {
@@ -140,12 +149,16 @@
     </section>
 
     <section id="experience" class="portfolio-section" aria-labelledby="experience-heading">
-      <p class="section-kicker">Experience</p>
-      <h2 id="experience-heading" class="portfolio-section__title">Experience</h2>
-      <p class="portfolio-section__intro">Roles where I shipped production systems and measurable outcomes.</p>
+      <p class="section-kicker reveal-on-scroll">Experience</p>
+      <h2 id="experience-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        Experience
+      </h2>
+      <p class="portfolio-section__intro reveal-on-scroll reveal-on-scroll--delay-2">
+        Roles where I shipped production systems and measurable outcomes.
+      </p>
       <div class="timeline">
         @for (job of experience; track job.role + job.company) {
-          <article class="job-card reveal">
+          <article class="job-card reveal-on-scroll">
             <div class="job-card__header">
               <h3 class="job-card__title">{{ job.role }} · {{ job.company }}</h3>
               <p class="job-card__meta">{{ job.location }} · {{ job.period }}</p>
@@ -161,14 +174,16 @@
     </section>
 
     <section id="projects" class="portfolio-section" aria-labelledby="projects-heading">
-      <p class="section-kicker">Featured work</p>
-      <h2 id="projects-heading" class="portfolio-section__title">Key projects</h2>
-      <p class="portfolio-section__intro">
+      <p class="section-kicker reveal-on-scroll">Featured work</p>
+      <h2 id="projects-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        Key projects
+      </h2>
+      <p class="portfolio-section__intro reveal-on-scroll reveal-on-scroll--delay-2">
         Representative work spanning HRMS, AI-assisted tooling, research platforms, and e-commerce.
       </p>
       <div class="project-grid">
         @for (p of projects; track p.name) {
-          <article class="project-card reveal">
+          <article class="project-card reveal-on-scroll">
             <h3>{{ p.name }}</h3>
             <p class="project-card__stack">{{ p.stack }}</p>
             <ul>
@@ -182,18 +197,22 @@
     </section>
 
     <section id="education" class="portfolio-section" aria-labelledby="education-heading">
-      <p class="section-kicker">Background</p>
-      <h2 id="education-heading" class="portfolio-section__title">Education & certifications</h2>
-      <p class="portfolio-section__intro">Academic foundation and continuous learning.</p>
+      <p class="section-kicker reveal-on-scroll">Background</p>
+      <h2 id="education-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        Education & certifications
+      </h2>
+      <p class="portfolio-section__intro reveal-on-scroll reveal-on-scroll--delay-2">
+        Academic foundation and continuous learning.
+      </p>
       <div class="edu-grid">
-        <article class="edu-card reveal">
+        <article class="edu-card reveal-on-scroll">
           <h3>{{ education.degree }}</h3>
           <p>{{ education.school }}</p>
           <p>{{ education.period }}</p>
           <p><strong>GPA:</strong> {{ education.gpa }}</p>
           <p><strong>Relevant coursework:</strong> {{ education.coursework }}</p>
         </article>
-        <article class="edu-card reveal reveal--delay-2">
+        <article class="edu-card reveal-on-scroll reveal-on-scroll--delay-2">
           <h3>Certifications & training</h3>
           <ul class="cert-list">
             @for (c of certifications; track c) {
@@ -205,10 +224,12 @@
     </section>
 
     <section id="contact" class="portfolio-section contact-section" aria-labelledby="contact-heading">
-      <p class="section-kicker">Let's connect</p>
-      <h2 id="contact-heading" class="portfolio-section__title">Contact</h2>
+      <p class="section-kicker reveal-on-scroll">Let's connect</p>
+      <h2 id="contact-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        Contact
+      </h2>
       <div class="contact-grid">
-        <div class="contact-copy reveal">
+        <div class="contact-copy reveal-on-scroll">
           <p class="portfolio-section__intro" style="margin-bottom: 1rem">
             Interested in collaborating, hiring, or building something meaningful? Send a message and let's talk about
             the product, team, or challenge you're solving.
@@ -235,7 +256,7 @@
             <a [href]="'mailto:' + social.email">{{ social.email }}</a>
           </p>
         </div>
-        <div class="contact-form reveal reveal--delay-2">
+        <div class="contact-form reveal-on-scroll reveal-on-scroll--delay-2">
           @if (formSubmitted()) {
             <p class="form-success" role="status">
               Thanks — your mail client should open with your message. If it does not, email me at
@@ -280,7 +301,11 @@
     </section>
   </main>
 
-  <footer class="portfolio-footer">
+  <footer class="portfolio-footer reveal-on-scroll">
     <p>© {{ currentYear }} Kunal Gupta · Full-Stack Developer · Jaipur, India</p>
   </footer>
 </div>
+
+@if (isLoading()) {
+  <app-loader></app-loader>
+}
