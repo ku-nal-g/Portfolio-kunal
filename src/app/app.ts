@@ -4,6 +4,7 @@ import {
   Component,
   DestroyRef,
   inject,
+  OnInit,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
@@ -20,7 +21,7 @@ import { Toast } from './services/toast';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class App implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -32,6 +33,27 @@ export class App {
     }
 
     afterNextRender(() => this.initScrollEffects());
+  }
+  ngOnInit(): void {
+    // Prevent Right-Click Context Menu
+    if (typeof document !== 'undefined') {
+      document.addEventListener('contextmenu', (event) => event.preventDefault());
+
+      // Block DevTools Keyboard Shortcuts
+      document.addEventListener('keydown', (event) => {
+        const isCtrlShift = event.ctrlKey && event.shiftKey;
+
+        if (
+          event.key === 'F12' ||
+          (isCtrlShift && (event.key === 'I' || event.key === 'J' || event.key === 'C')) ||
+          (event.ctrlKey && event.key === 'U')
+        ) {
+          event.preventDefault();
+          return false;
+        }
+        return true;
+      });
+    }
   }
 
   /** Reveal sections in view; observe the rest (runs after layout + hydration). */
