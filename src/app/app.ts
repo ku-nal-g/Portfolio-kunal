@@ -31,6 +31,7 @@ export class App implements OnInit {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
+
     afterNextRender(() => this.initScrollEffects());
   }
   ngOnInit(): void {
@@ -217,6 +218,15 @@ export class App implements OnInit {
   ];
 
   protected readonly experience = [
+     {
+      role: 'Software Engineer - IT',
+      company: 'Au Small Finance Bank',
+      location: 'Jaipur, Rajasthan',
+      period: 'May 2026 – Present',
+      highlights: [
+        'Engineering the frontend architecture for AU Bank’s core application within the Video Banking team using Angular, enhancing real-time user experiences for high-concurrency video banking services.'
+      ],
+    },
     {
       role: 'Software Engineer',
       company: 'Celebal Technologies',
