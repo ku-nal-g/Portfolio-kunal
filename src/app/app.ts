@@ -31,7 +31,6 @@ export class App implements OnInit {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-
     afterNextRender(() => this.initScrollEffects());
   }
   ngOnInit(): void {
