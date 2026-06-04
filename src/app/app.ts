@@ -210,9 +210,18 @@ export class App implements OnInit {
         'Figma',
         'ApexCharts',
         'Agile/Scrum',
-        'TDD',
         'Code review',
         'Performance optimization',
+      ],
+    },
+    {
+      category: 'AI Tools',
+      items: [
+        'Claude',
+        'Github Copilot',
+        'Chatgpt',
+        'Gemini',
+        'Cursor'
       ],
     },
   ];
