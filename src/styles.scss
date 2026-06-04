@@ -82,6 +82,34 @@ img {
   color: var(--color-text);
 }
 
+/* Scrollbar styling */
+/* Firefox */
+* {
+  scrollbar-color: var(--color-accent) var(--color-surface-strong);
+  scrollbar-width: thin;
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-strong);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 5px;
+  border: 2px solid var(--color-surface-strong);
+  transition: background 0.25s var(--ease-smooth);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-hover);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
