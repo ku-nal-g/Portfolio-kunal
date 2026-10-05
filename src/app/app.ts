@@ -151,10 +151,10 @@ export class App implements OnInit {
     'Results-driven Full-Stack Developer with 3+ years of experience architecting and deploying scalable enterprise web applications. Specialized in Angular and Node.js ecosystems with proven expertise in building HRMS platforms, AI-powered solutions, and real-time dashboards. Delivered solutions reducing manual reporting by 60% and improving resource utilization by 40%. Strong background in CI/CD automation, RESTful API development, and cloud integration using Azure DevOps.';
 
   protected readonly highlights = [
-    { value: '3+', label: 'Years building web products' },
+    { value: '4+', label: 'Years building web products' },
     { value: '2000+', label: 'Employees served via HRMS' },
     { value: '60%', label: 'Manual reporting reduction' },
-    { value: '5+', label: 'Active projects analyzed' },
+    { value: '10+', label: 'Active projects analyzed' },
   ];
 
   protected readonly specialties = [
@@ -179,6 +179,7 @@ export class App implements OnInit {
         'Bootstrap',
         'Responsive Design',
         'SPA Architecture',
+        'Angular Material'
       ],
     },
     {
@@ -221,7 +222,8 @@ export class App implements OnInit {
         'Github Copilot',
         'Chatgpt',
         'Gemini',
-        'Cursor'
+        'Cursor',
+        'Grok'
       ],
     },
   ];
