@@ -179,7 +179,6 @@ export class App implements OnInit {
         'Bootstrap',
         'Responsive Design',
         'SPA Architecture',
-        'Angular Material'
       ],
     },
     {
@@ -201,6 +200,8 @@ export class App implements OnInit {
         'Azure OpenAI Services',
         'CI/CD Pipelines',
         'Git Version Control',
+        'Gitlab',
+        'Bit Bucket'
       ],
     },
     {
@@ -213,6 +214,8 @@ export class App implements OnInit {
         'Agile/Scrum',
         'Code review',
         'Performance optimization',
+        'Jira',
+        'Bruno'
       ],
     },
     {
