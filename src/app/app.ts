@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   afterNextRender,
   Component,
@@ -14,6 +14,10 @@ import { ToastContainer } from './components/toast/toast';
 import { Api } from './services/api';
 import { Toast } from './services/toast';
 
+type Theme = 'light' | 'dark';
+
+const THEME_KEY = 'theme';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -24,16 +28,23 @@ import { Toast } from './services/toast';
 export class App implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly document = inject(DOCUMENT);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   private readonly toast = inject(Toast);
 
+  /** Light is the default; dark is the blueprint variant. */
+  protected readonly theme = signal<Theme>('light');
+
   constructor(private apiService: Api) {
-    if (!isPlatformBrowser(this.platformId)) {
+    if (!this.isBrowser) {
       return;
     }
 
+    this.initTheme();
     afterNextRender(() => this.initScrollEffects());
   }
+
   ngOnInit(): void {
     // Prevent Right-Click Context Menu
     if (typeof document !== 'undefined') {
@@ -55,6 +66,104 @@ export class App implements OnInit {
       });
     }
   }
+
+  /* ---------------------------------------------------------------------------
+     THEME
+  --------------------------------------------------------------------------- */
+
+  /** Read the theme set by the inline script in index.html (or fall back to storage / OS). */
+  private initTheme(): void {
+    const root = this.document.documentElement;
+    const fromDom = root.getAttribute('data-theme') as Theme | null;
+    let stored: Theme | null = null;
+
+    try {
+      stored = localStorage.getItem(THEME_KEY) as Theme | null;
+    } catch {
+      stored = null;
+    }
+
+    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+    const initial: Theme = fromDom ?? stored ?? (prefersDark ? 'dark' : 'light');
+    this.applyTheme(initial, false);
+
+    // Follow the OS setting until the visitor picks a theme themselves.
+    const mq = window.matchMedia?.('(prefers-color-scheme: dark)');
+    if (mq) {
+      const onChange = (e: MediaQueryListEvent): void => {
+        let hasChoice = false;
+        try {
+          hasChoice = !!localStorage.getItem(THEME_KEY);
+        } catch {
+          hasChoice = false;
+        }
+        if (!hasChoice) {
+          this.applyTheme(e.matches ? 'dark' : 'light', false);
+        }
+      };
+      mq.addEventListener('change', onChange);
+      this.destroyRef.onDestroy(() => mq.removeEventListener('change', onChange));
+    }
+  }
+
+  private applyTheme(theme: Theme, persist = true): void {
+    const root = this.document.documentElement;
+    this.theme.set(theme);
+    root.setAttribute('data-theme', theme);
+    root.style.colorScheme = theme;
+
+    if (persist) {
+      try {
+        localStorage.setItem(THEME_KEY, theme);
+      } catch {
+        /* storage unavailable — theme still applies for this visit */
+      }
+    }
+  }
+
+  /** Switch theme with a circle that grows out of the toggle button. */
+  protected toggleTheme(event: MouseEvent): void {
+    const next: Theme = this.theme() === 'dark' ? 'light' : 'dark';
+
+    const doc = this.document as Document & {
+      startViewTransition?: (cb: () => void) => { ready: Promise<void> };
+    };
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    if (!doc.startViewTransition || reduceMotion) {
+      this.applyTheme(next);
+      return;
+    }
+
+    // Keyboard clicks report 0,0 — use the button centre instead.
+    const target = event.currentTarget as HTMLElement | null;
+    const rect = target?.getBoundingClientRect();
+    const x = event.clientX || (rect ? rect.left + rect.width / 2 : window.innerWidth);
+    const y = event.clientY || (rect ? rect.top + rect.height / 2 : 0);
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = doc.startViewTransition(() => this.applyTheme(next));
+
+    transition.ready.then(() => {
+      this.document.documentElement.animate(
+        {
+          clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`],
+        },
+        {
+          duration: 650,
+          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      );
+    });
+  }
+
+  /* ---------------------------------------------------------------------------
+     SCROLL EFFECTS
+  --------------------------------------------------------------------------- */
 
   /** Reveal sections in view; observe the rest (runs after layout + hydration). */
   private initScrollEffects(): void {
@@ -148,13 +257,13 @@ export class App implements OnInit {
   protected readonly telHref = 'tel:+917302207232';
 
   protected readonly summary =
-    'Results-driven Full-Stack Developer with 3+ years of experience architecting and deploying scalable enterprise web applications. Specialized in Angular and Node.js ecosystems with proven expertise in building HRMS platforms, AI-powered solutions, and real-time dashboards. Delivered solutions reducing manual reporting by 60% and improving resource utilization by 40%. Strong background in CI/CD automation, RESTful API development, and cloud integration using Azure DevOps.';
+    'Results-driven Full-Stack Developer with 4+ years of experience architecting and deploying scalable enterprise web applications. Specialized in Angular and Node.js ecosystems with proven expertise in building HRMS platforms, AI-powered solutions, and real-time dashboards. Delivered solutions reducing manual reporting by 60% and improving resource utilization by 40%. Strong background in CI/CD automation, RESTful API development, and cloud integration using Azure DevOps.';
 
   protected readonly highlights = [
     { value: '4+', label: 'Years building web products' },
     { value: '2000+', label: 'Employees served via HRMS' },
     { value: '60%', label: 'Manual reporting reduction' },
-    { value: '10+', label: 'Active projects analyzed' },
+    { value: '50+', label: 'Projects tracked in live dashboards' },
   ];
 
   protected readonly specialties = [
@@ -183,14 +292,7 @@ export class App implements OnInit {
     },
     {
       category: 'Backend',
-      items: [
-        'Node.js',
-        'Express.js',
-        'RESTful APIs',
-        'JWT Authentication',
-        'SQL',
-        'NoSQL',
-      ],
+      items: ['Node.js', 'Express.js', 'RESTful APIs', 'JWT Authentication', 'SQL', 'NoSQL'],
     },
     {
       category: 'Cloud & DevOps',
@@ -201,7 +303,7 @@ export class App implements OnInit {
         'CI/CD Pipelines',
         'Git Version Control',
         'Gitlab',
-        'Bit Bucket'
+        'Bit Bucket',
       ],
     },
     {
@@ -215,30 +317,23 @@ export class App implements OnInit {
         'Code review',
         'Performance optimization',
         'Jira',
-        'Bruno'
+        'Bruno',
       ],
     },
     {
       category: 'AI Tools',
-      items: [
-        'Claude',
-        'Github Copilot',
-        'Chatgpt',
-        'Gemini',
-        'Cursor',
-        'Grok'
-      ],
+      items: ['Claude', 'Github Copilot', 'Chatgpt', 'Gemini', 'Cursor', 'Grok'],
     },
   ];
 
   protected readonly experience = [
-     {
+    {
       role: 'Software Engineer - IT',
       company: 'Au Small Finance Bank',
       location: 'Jaipur, Rajasthan',
       period: 'May 2026 – Present',
       highlights: [
-        'Engineering the frontend architecture for AU Bank’s core application within the Video Banking team using Angular, enhancing real-time user experiences for high-concurrency video banking services.'
+        'Engineering the frontend architecture for AU Bank’s core application within the Video Banking team using Angular, enhancing real-time user experiences for high-concurrency video banking services.',
       ],
     },
     {
@@ -277,7 +372,7 @@ export class App implements OnInit {
       points: [
         'Managed and enhanced enterprise banking chatbot solutions using Azure Bot Framework for customer support and service automation',
         'Designed and implemented conversational bot journeys for banking workflows including card services, account assistance, and transaction-related queries',
-        'Integrated Direct Line API for secure real-time communication between Angular frontend applications and chatbot services',
+        'Integrated Direct Line API for secure real-time communication between frontend applications and chatbot services',
         'Collaborated with backend and business teams to optimize conversational flows, improve response accuracy, and enhance customer experience',
         'Monitored bot interactions, identified conversation gaps, and implemented continuous improvements to increase successful query resolution rates',
       ],

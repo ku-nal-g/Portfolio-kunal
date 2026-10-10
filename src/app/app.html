@@ -23,8 +23,8 @@
               stroke-linejoin="round" />
             <defs>
               <linearGradient id="logoStroke" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#a78bfa" />
-                <stop offset="1" stop-color="#22d3ee" />
+                <stop stop-color="#2346f5" />
+                <stop offset="1" stop-color="#2346f5" />
               </linearGradient>
             </defs>
           </svg>
@@ -42,13 +42,31 @@
           (click)="scrollTo('contact'); $event.preventDefault()"><span>Contact</span></a>
       </nav>
 
-      <button type="button" class="portfolio-nav-toggle" [class.is-active]="mobileNavOpen()"
-        [attr.aria-expanded]="mobileNavOpen()" aria-controls="mobile-drawer" aria-label="Toggle navigation"
-        (click)="toggleMobileNav()">
-        <span class="portfolio-nav-toggle__bars" aria-hidden="true">
-          <i></i><i></i><i></i>
-        </span>
-      </button>
+      <div class="portfolio-header__actions">
+        <button type="button" class="theme-toggle" (click)="toggleTheme($event)"
+          [attr.aria-pressed]="theme() === 'dark'"
+          [attr.aria-label]="theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'"
+          [attr.title]="theme() === 'dark' ? 'Light theme' : 'Dark theme'">
+          <svg class="theme-toggle__moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+            stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" />
+          </svg>
+          <svg class="theme-toggle__sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+            stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2" />
+            <path
+              d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+          </svg>
+        </button>
+
+        <button type="button" class="portfolio-nav-toggle" [class.is-active]="mobileNavOpen()"
+          [attr.aria-expanded]="mobileNavOpen()" aria-controls="mobile-drawer" aria-label="Toggle navigation"
+          (click)="toggleMobileNav()">
+          <span class="portfolio-nav-toggle__bars" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -82,12 +100,12 @@
       <div class="hero__content">
         <div class="hero__badge reveal reveal--delay-1">
           <span class="hero__badge-dot" aria-hidden="true"></span>
-          Available for full-time roles &amp; impactful products
+          Open to new opportunities
         </div>
 
         <p class="hero__eyebrow reveal reveal--delay-1">
           <span class="hero__eyebrow-line" aria-hidden="true"></span>
-          Full-Stack Developer · 4+ Years
+          Full-stack developer, 4+ years
         </p>
 
         <h1 id="hero-heading" class="hero__title" aria-label="Kunal Gupta">
@@ -102,12 +120,11 @@
         </h1>
 
         <p class="hero__subtitle reveal reveal--delay-2">
-          I design elegant, high-performance web experiences with Angular, Node.js, and cloud services for products
-          that need both scale and polish.
+          I build fast, well-engineered web products with Angular, Node.js and Azure — from enterprise HRMS
+          platforms to real-time banking experiences.
         </p>
         <p class="hero__summary reveal reveal--delay-2">
-          Based in Jaipur, India, I build enterprise platforms, AI-powered workflows, and real-time dashboards with a
-          strong focus on product quality, speed, and measurable impact.
+          Based in Jaipur, India. Currently on the Video Banking team at AU Small Finance Bank.
         </p>
 
         <div class="hero__links reveal reveal--delay-3">
@@ -185,7 +202,7 @@
               </svg>
             </span>
             <span class="hero-orbit__label">Frontend</span>
-            <span class="hero-orbit__sub">Angular · TS</span>
+            <span class="hero-orbit__sub">Angular, TypeScript</span>
           </div>
 
           <div class="hero-orbit hero-orbit--two reveal reveal--delay-3" aria-hidden="true">
@@ -195,7 +212,7 @@
               </svg>
             </span>
             <span class="hero-orbit__label">Cloud &amp; AI</span>
-            <span class="hero-orbit__sub">Azure · OpenAI</span>
+            <span class="hero-orbit__sub">Azure, OpenAI</span>
           </div>
 
           <div class="hero-orbit hero-orbit--three reveal reveal--delay-3" aria-hidden="true">
@@ -206,7 +223,7 @@
               </svg>
             </span>
             <span class="hero-orbit__label">Backend</span>
-            <span class="hero-orbit__sub">Node · SQL</span>
+            <span class="hero-orbit__sub">Node.js, SQL</span>
           </div>
         </div>
       </div>
@@ -239,8 +256,7 @@
     <section class="metrics portfolio-section portfolio-section--tight-top" aria-label="Key highlights">
       <div class="metrics-grid">
         @for (item of highlights; track item.label; let i = $index) {
-        <article class="metric-card reveal-on-scroll" [class.reveal-on-scroll--delay-1]="i === 1"
-          [class.reveal-on-scroll--delay-2]="i === 2" [class.reveal-on-scroll--delay-3]="i === 3">
+        <article class="metric-card reveal-on-scroll">
           <span class="card-sheen" aria-hidden="true"></span>
           <p class="metric-card__value">{{ item.value }}</p>
           <p class="metric-card__label">{{ item.label }}</p>
@@ -254,11 +270,11 @@
     <section id="about" class="portfolio-section" aria-labelledby="about-heading">
       <div class="section-head">
         <p class="section-kicker reveal-on-scroll"><span class="section-kicker__num">01</span>About me</p>
-        <h2 id="about-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        <h2 id="about-heading" class="portfolio-section__title reveal-on-scroll">
           Building dependable products with clean user experience.
         </h2>
       </div>
-      <div class="about-panel reveal-on-scroll reveal-on-scroll--delay-2">
+      <div class="about-panel reveal-on-scroll">
         <span class="card-sheen" aria-hidden="true"></span>
         <span class="about-panel__quote" aria-hidden="true">&ldquo;</span>
         <p class="about-panel__text">{{ summary }}</p>
@@ -269,16 +285,16 @@
     <section id="skills" class="portfolio-section" aria-labelledby="skills-heading">
       <div class="section-head">
         <p class="section-kicker reveal-on-scroll"><span class="section-kicker__num">02</span>Core stack</p>
-        <h2 id="skills-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        <h2 id="skills-heading" class="portfolio-section__title reveal-on-scroll">
           Technical skills
         </h2>
-        <p class="portfolio-section__intro reveal-on-scroll reveal-on-scroll--delay-2">
-          A focused toolkit across the frontend, backend, cloud, and delivery practices I use every day.
+        <p class="portfolio-section__intro reveal-on-scroll">
+          The frontend, backend, cloud and delivery tools I use every day.
         </p>
       </div>
       <div class="skills-grid">
         @for (group of skills; track group.category; let i = $index) {
-        <article class="skill-card reveal-on-scroll" [class.reveal-on-scroll--delay-1]="i % 2 === 1">
+        <article class="skill-card reveal-on-scroll">
           <span class="card-sheen" aria-hidden="true"></span>
           <div class="skill-card__head">
             <span class="skill-card__bullet" aria-hidden="true"></span>
@@ -298,10 +314,10 @@
     <section id="experience" class="portfolio-section" aria-labelledby="experience-heading">
       <div class="section-head">
         <p class="section-kicker reveal-on-scroll"><span class="section-kicker__num">03</span>Experience</p>
-        <h2 id="experience-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        <h2 id="experience-heading" class="portfolio-section__title reveal-on-scroll">
           Where I&rsquo;ve shipped
         </h2>
-        <p class="portfolio-section__intro reveal-on-scroll reveal-on-scroll--delay-2">
+        <p class="portfolio-section__intro reveal-on-scroll">
           Roles where I shipped production systems and measurable outcomes.
         </p>
       </div>
@@ -336,16 +352,16 @@
     <section id="projects" class="portfolio-section" aria-labelledby="projects-heading">
       <div class="section-head">
         <p class="section-kicker reveal-on-scroll"><span class="section-kicker__num">04</span>Featured work</p>
-        <h2 id="projects-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        <h2 id="projects-heading" class="portfolio-section__title reveal-on-scroll">
           Key projects
         </h2>
-        <p class="portfolio-section__intro reveal-on-scroll reveal-on-scroll--delay-2">
-          Representative work spanning HRMS, AI-assisted tooling, research platforms, and e-commerce.
+        <p class="portfolio-section__intro reveal-on-scroll">
+          Work spanning banking, HRMS, AI-assisted tooling, research platforms and e-commerce.
         </p>
       </div>
       <div class="project-grid">
         @for (p of projects; track p.name; let i = $index) {
-        <article class="project-card reveal-on-scroll" [class.reveal-on-scroll--delay-1]="i % 2 === 1">
+        <article class="project-card reveal-on-scroll">
           <span class="card-sheen" aria-hidden="true"></span>
           <div class="project-card__top">
             <span class="project-card__index" aria-hidden="true">{{ i + 1 }}</span>
@@ -371,12 +387,9 @@
     <section id="education" class="portfolio-section" aria-labelledby="education-heading">
       <div class="section-head">
         <p class="section-kicker reveal-on-scroll"><span class="section-kicker__num">05</span>Background</p>
-        <h2 id="education-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
+        <h2 id="education-heading" class="portfolio-section__title reveal-on-scroll">
           Education &amp; certifications
         </h2>
-        <p class="portfolio-section__intro reveal-on-scroll reveal-on-scroll--delay-2">
-          Academic foundation and continuous learning.
-        </p>
       </div>
       <div class="edu-grid">
         <article class="edu-card reveal-on-scroll">
@@ -395,7 +408,7 @@
               education.coursework }}</span></p>
         </article>
 
-        <article class="edu-card reveal-on-scroll reveal-on-scroll--delay-2">
+        <article class="edu-card reveal-on-scroll">
           <span class="card-sheen" aria-hidden="true"></span>
           <span class="edu-card__icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -417,16 +430,16 @@
     <section id="contact" class="portfolio-section contact-section" aria-labelledby="contact-heading">
       <div class="section-head">
         <p class="section-kicker reveal-on-scroll"><span class="section-kicker__num">06</span>Let&rsquo;s connect</p>
-        <h2 id="contact-heading" class="portfolio-section__title reveal-on-scroll reveal-on-scroll--delay-1">
-          Contact
+        <h2 id="contact-heading" class="portfolio-section__title reveal-on-scroll">
+          Let&rsquo;s build something.
         </h2>
       </div>
 
       <div class="contact-grid">
         <div class="contact-copy reveal-on-scroll">
           <p class="portfolio-section__intro">
-            Interested in collaborating, hiring, or building something meaningful? Send a message and let&rsquo;s talk
-            about the product, team, or challenge you&rsquo;re solving.
+            Hiring, collaborating, or working on a hard frontend problem? Tell me about the product, the team, or the
+            challenge and I&rsquo;ll get back to you.
           </p>
 
           <div class="contact-points">
@@ -474,16 +487,15 @@
           </div>
 
           <p class="contact-copy__note">
-            Prefer email directly? <a [href]="'mailto:' + social.email">{{ social.email }}</a>
+            Prefer email? Write to <a [href]="'mailto:' + social.email">{{ social.email }}</a>
           </p>
         </div>
 
-        <div class="contact-form reveal-on-scroll reveal-on-scroll--delay-2">
+        <div class="contact-form reveal-on-scroll">
           <span class="card-sheen" aria-hidden="true"></span>
           @if (formSubmitted()) {
           <p class="form-success" role="status">
-            Thanks — your mail client should open with your message. If it does not, email me at
-            {{ social.email }}.
+            Message sent. I&rsquo;ll reply to the email address you entered.
           </p>
           }
           <form [formGroup]="contactForm" (ngSubmit)="submitContact()" novalidate>
@@ -491,10 +503,10 @@
               <label for="contact-name">Name</label>
               <input id="contact-name" type="text" formControlName="name" autocomplete="name" placeholder="Your name" />
               @if (contactForm.controls.name.touched && contactForm.controls.name.errors?.['required']) {
-              <p class="form-error">Please enter your name.</p>
+              <p class="form-error">Enter your name.</p>
               }
               @if (contactForm.controls.name.touched && contactForm.controls.name.errors?.['minlength']) {
-              <p class="form-error">Name should be at least 2 characters.</p>
+              <p class="form-error">Name needs at least 2 characters.</p>
               }
             </div>
 
@@ -503,10 +515,10 @@
               <input id="contact-email" type="email" formControlName="email" autocomplete="email"
                 placeholder="you@company.com" />
               @if (contactForm.controls.email.touched && contactForm.controls.email.errors?.['required']) {
-              <p class="form-error">Please enter your email.</p>
+              <p class="form-error">Enter your email.</p>
               }
               @if (contactForm.controls.email.touched && contactForm.controls.email.errors?.['email']) {
-              <p class="form-error">Enter a valid email address.</p>
+              <p class="form-error">Enter a valid email, like name&#64;company.com.</p>
               }
             </div>
 
@@ -515,10 +527,10 @@
               <textarea id="contact-message" formControlName="message" rows="5"
                 placeholder="Tell me about the role or project…"></textarea>
               @if (contactForm.controls.message.touched && contactForm.controls.message.errors?.['required']) {
-              <p class="form-error">Please enter a message.</p>
+              <p class="form-error">Enter a message.</p>
               }
               @if (contactForm.controls.message.touched && contactForm.controls.message.errors?.['minlength']) {
-              <p class="form-error">Message should be at least 10 characters.</p>
+              <p class="form-error">Message needs at least 10 characters.</p>
               }
             </div>
 
@@ -535,9 +547,9 @@
     </section>
   </main>
 
-  <footer class="portfolio-footer reveal-on-scroll">
+  <footer class="portfolio-footer">
     <div class="portfolio-footer__inner">
-      <p>© {{ currentYear }} Kunal Gupta · Full-Stack Developer · Jaipur, India</p>
+      <p>© {{ currentYear }} Kunal Gupta, Jaipur, India</p>
       <p class="portfolio-footer__built">Designed &amp; built with Angular</p>
     </div>
   </footer>
